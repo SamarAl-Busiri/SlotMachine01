@@ -1,28 +1,41 @@
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 // MENU SCENE
 var scenes;
 (function (scenes) {
-    var SlotMachine = (function (_super) {
+    var SlotMachine = /** @class */ (function (_super) {
         __extends(SlotMachine, _super);
         // CONSTRUCTOR ++++++++++++++++++++++
         function SlotMachine() {
-            _super.call(this);
-            this._grapes = 0;
-            this._bananas = 0;
-            this._oranges = 0;
-            this._cherries = 0;
-            this._bars = 0;
-            this._bells = 0;
-            this._sevens = 0;
-            this._blanks = 0;
+            var _this = _super.call(this) || this;
+            _this._grapes = 0;
+            _this._bananas = 0;
+            _this._oranges = 0;
+            _this._cherries = 0;
+            _this._bars = 0;
+            _this._bells = 0;
+            _this._sevens = 0;
+            _this._blanks = 0;
+            return _this;
         }
         // PUBLIC METHODS +++++++++++++++++++++
         // Start Method
         SlotMachine.prototype.start = function () {
+            // sound  
+            createjs.Sound.registerSound("../../Assets/audio/coins.wav", "coins");
+            createjs.Sound.registerSound("../../Assets/audio/childrenoh.ogg", "childrenoh");
+            createjs.Sound.registerSound("../../Assets/audio/button1.wav", "button1");
+            createjs.Sound.registerSound("../../Assets/audio/sewing_2.ogg", "sewing_2");
+            createjs.Sound.registerSound("../../Assets/audio/soldier-no.mp3", "soldier-no");
+            createjs.Sound.registerSound("../../Assets/audio/power_down.ogg", "power_down");
             // Reset the Game to initial values 
             this._resetAll();
             // add background image to the scene
@@ -32,10 +45,12 @@ var scenes;
             this._bet1Button = new objects.Button("Bet1Button", 168, 382, false);
             this.addChild(this._bet1Button);
             this._bet1Button.on("click", this._bet1ButtonClick, this);
+            createjs.Sound.play("button1");
             // add Bet10Button to the scene
             this._bet10Button = new objects.Button("Bet10Button", 240, 382, false);
             this.addChild(this._bet10Button);
             this._bet10Button.on("click", this._bet10ButtonClick, this);
+            createjs.Sound.play("button1");
             // add Bet100Button to the scene
             this._bet100Button = new objects.Button("Bet100Button", 312, 382, false);
             this.addChild(this._bet100Button);
@@ -44,6 +59,7 @@ var scenes;
             this._spinButton = new objects.Button("SpinButton", 402, 382, false);
             this.addChild(this._spinButton);
             this._spinButton.on("click", this._spinButtonClick, this);
+            createjs.Sound.play("button1");
             // add JackPot Text to the scene
             this._jackpotText = new objects.Label(this.jackpot.toString(), "14px Consolas", "#ff0000", 353, 107, false);
             this._jackpotText.textAlign = "right";
@@ -68,6 +84,48 @@ var scenes;
             this._fadeIn(500);
             // add this scene to the global stage container
             stage.addChild(this);
+            // resetButton , resetButtonRing
+            this.resetButton = new objects.BlinkButton("../../Assets/images/ResetButton.png", 200, 50, 40, 40, 1, 1);
+            this.resetButtonRing = new objects.BlinkButton("../../Assets/images/ResetButtonRing.png", 200, 50, 40, 40, 1, 0.1);
+            this.resetButton.on("mouseover", function () {
+                this.resetButtonRing.alpha = this.resetButtonRing.alphaOver;
+            }, this);
+            this.resetButton.on("mouseout", function () {
+                this.resetButtonRing.alpha = this.resetButtonRing.alphaOut;
+            }, this);
+            this.resetButton.on("click", function () {
+                this._resetAll();
+                createjs.Sound.stop();
+                createjs.Sound.play("yay");
+            }, this);
+            this.resetButtonRing.on("click", function () {
+                this.resetAll();
+                createjs.Sound.stop();
+                createjs.Sound.play("yay");
+            }, this);
+            this.addChild(this.resetButton);
+            this.addChild(this.resetButtonRing);
+            // exitButton, exitButtonLight
+            this.exitButton = new objects.BlinkButton("../../Assets/images/ExitButton.png", 430, 50, 40, 40, 1, 1);
+            this.exitButtonLight = new objects.BlinkButton("../../Assets/images/ExitButtonLight.png", 430, 50, 40, 40, 1, 0.1);
+            this.exitButton.on("mouseover", function () {
+                this.exitButtonLight.alpha = this.exitButtonLight.alphaOver;
+            }, this);
+            this.exitButton.on("mouseout", function () {
+                this.exitButtonLight.alpha = this.exitButtonLight.alphaOut;
+            }, this);
+            this.exitButton.on("click", function () {
+                createjs.Sound.stop();
+                createjs.Sound.play("power_down");
+                setTimeout(function () { window.close(); }, 2500);
+            }, this);
+            this.exitButtonLight.on("click", function () {
+                createjs.Sound.stop();
+                createjs.Sound.play("power_down");
+                setTimeout(function () { window.close(); }, 2500);
+            }, this);
+            this.addChild(this.exitButton);
+            this.addChild(this.exitButtonLight);
         };
         // SLOT_MACHINE Scene updates here
         SlotMachine.prototype.update = function () {
@@ -91,35 +149,35 @@ var scenes;
             for (var spin = 0; spin < 3; spin++) {
                 outCome[spin] = Math.floor((Math.random() * 65) + 1);
                 switch (outCome[spin]) {
-                    case this._checkRange(outCome[spin], 1, 27):
+                    case this._checkRange(outCome[spin], 1, 27): // 41.5% probability
                         betLine[spin] = "Blank";
                         this._blanks++;
                         break;
-                    case this._checkRange(outCome[spin], 28, 37):
+                    case this._checkRange(outCome[spin], 28, 37): // 15.4% probability
                         betLine[spin] = "Grapes";
                         this._grapes++;
                         break;
-                    case this._checkRange(outCome[spin], 38, 46):
+                    case this._checkRange(outCome[spin], 38, 46): // 13.8% probability
                         betLine[spin] = "Banana";
                         this._bananas++;
                         break;
-                    case this._checkRange(outCome[spin], 47, 54):
+                    case this._checkRange(outCome[spin], 47, 54): // 12.3% probability
                         betLine[spin] = "Orange";
                         this._oranges++;
                         break;
-                    case this._checkRange(outCome[spin], 55, 59):
+                    case this._checkRange(outCome[spin], 55, 59): //  7.7% probability
                         betLine[spin] = "Cherry";
                         this._cherries++;
                         break;
-                    case this._checkRange(outCome[spin], 60, 62):
+                    case this._checkRange(outCome[spin], 60, 62): //  4.6% probability
                         betLine[spin] = "Bar";
                         this._bars++;
                         break;
-                    case this._checkRange(outCome[spin], 63, 64):
+                    case this._checkRange(outCome[spin], 63, 64): //  3.1% probability
                         betLine[spin] = "Bell";
                         this._bells++;
                         break;
-                    case this._checkRange(outCome[spin], 65, 65):
+                    case this._checkRange(outCome[spin], 65, 65): //  1.5% probability
                         betLine[spin] = "Seven";
                         this._sevens++;
                         break;
@@ -220,20 +278,14 @@ var scenes;
         //EVENT HANDLERS ++++++++++++++++++++
         SlotMachine.prototype._bet1ButtonClick = function (event) {
             console.log("Bet 1 Credit");
-			this._resultText.Text = "0";
-			this.winnings = 0;
             this._placeBet(1);
         };
         SlotMachine.prototype._bet10ButtonClick = function (event) {
             console.log("Bet 10 Credit");
-			this._resultText.Text = "0";
-			this.winnings = 0;
             this._placeBet(10);
         };
         SlotMachine.prototype._bet100ButtonClick = function (event) {
             console.log("Bet 100 Credit");
-			this._resultText.Text = "0";
-			this.winnings = 0;
             this._placeBet(100);
         };
         SlotMachine.prototype._spinButtonClick = function (event) {

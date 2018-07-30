@@ -33,8 +33,14 @@ var assetData:objects.Asset[] = [
     {id: "Orange", src:"../../Assets/images/Orange.png"},
     {id: "Bar", src:"../../Assets/images/Bar.png"},
     {id: "Bell", src:"../../Assets/images/Bell.png"},
-    {id: "Seven", src:"../../Assets/images/Seven.png"}
-    
+    {id: "Seven", src:"../../Assets/images/Seven.png"},
+    { id: "yay", src: "../../Assets/audio/yay.ogg" },
+    { id: "coins", src: "../../Assets/audio/coins.wav" },
+    { id: "childrenoh", src: "../../Assets/audio/childrenoh.ogg" },
+    { id: "button1", src: "../../Assets/audio/button1.wav" },
+    { id: "sewing_2", src: "../../Assets/audio/sewing_2.ogg" },
+    { id: "soldier-no", src: "../../Assets/audio/soldier-no.mp3" },
+    { id: "power_down", src: "../../Assets/audio/power_down.ogg" }
 ];
 
 function preload() {

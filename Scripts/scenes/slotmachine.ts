@@ -17,6 +17,11 @@ module scenes {
         private jackpot: number;
         private playerBet: number;
 
+        private resetButton: objects.BlinkButton;
+        private resetButtonRing: objects.BlinkButton;
+        private exitButton: objects.BlinkButton;
+        private exitButtonLight: objects.BlinkButton;
+
         private _grapes = 0;
         private _bananas = 0;
         private _oranges = 0;
@@ -34,8 +39,17 @@ module scenes {
         
         // Start Method
         public start(): void { 
+             // sound  
+             createjs.Sound.registerSound("../../Assets/audio/coins.wav", "coins");
+             createjs.Sound.registerSound("../../Assets/audio/childrenoh.ogg", "childrenoh");
+             createjs.Sound.registerSound("../../Assets/audio/button1.wav", "button1");
+             createjs.Sound.registerSound("../../Assets/audio/sewing_2.ogg", "sewing_2");
+             createjs.Sound.registerSound("../../Assets/audio/soldier-no.mp3", "soldier-no");
+             createjs.Sound.registerSound("../../Assets/audio/power_down.ogg", "power_down");
+ 
             // Reset the Game to initial values 
             this._resetAll();
+
             
             // add background image to the scene
             this._backgroundImage = new createjs.Bitmap(assets.getResult("SlotMachine"));
@@ -45,12 +59,14 @@ module scenes {
             this._bet1Button = new objects.Button("Bet1Button", 168, 382, false);
             this.addChild(this._bet1Button);
             this._bet1Button.on("click", this._bet1ButtonClick, this); 
-            
+            createjs.Sound.play("button1");
+
             // add Bet10Button to the scene
             this._bet10Button = new objects.Button("Bet10Button", 240, 382, false);
             this.addChild(this._bet10Button);
             this._bet10Button.on("click", this._bet10ButtonClick, this); 
-            
+            createjs.Sound.play("button1");
+
             // add Bet100Button to the scene
             this._bet100Button = new objects.Button("Bet100Button", 312, 382, false);
             this.addChild(this._bet100Button);
@@ -60,7 +76,8 @@ module scenes {
             this._spinButton = new objects.Button("SpinButton", 402, 382, false);
             this.addChild(this._spinButton);
             this._spinButton.on("click", this._spinButtonClick, this); 
-        
+            createjs.Sound.play("button1");
+            
             // add JackPot Text to the scene
             this._jackpotText = new objects.Label(
                 this.jackpot.toString(),
@@ -108,6 +125,54 @@ module scenes {
         
             // add this scene to the global stage container
             stage.addChild(this);
+
+             // resetButton , resetButtonRing
+             this.resetButton = new objects.BlinkButton("../../Assets/images/ResetButton.png", 200, 50, 40, 40, 1, 1);            
+             this.resetButtonRing = new objects.BlinkButton("../../Assets/images/ResetButtonRing.png", 200, 50, 40, 40, 1, 0.1);
+ 
+             this.resetButton.on("mouseover", function () {
+                 this.resetButtonRing.alpha = this.resetButtonRing.alphaOver;
+             }, this);
+             this.resetButton.on("mouseout", function () {
+                 this.resetButtonRing.alpha = this.resetButtonRing.alphaOut;
+             }, this);
+             this.resetButton.on("click", function () {
+                 this._resetAll();
+                 createjs.Sound.stop();
+                 createjs.Sound.play("yay");
+             }, this);
+             this.resetButtonRing.on("click", function () {
+                 this.resetAll();
+                 createjs.Sound.stop();
+                 createjs.Sound.play("yay");
+             }, this);
+ 
+             this.addChild(this.resetButton);
+             this.addChild(this.resetButtonRing);
+             
+             // exitButton, exitButtonLight
+             this.exitButton = new objects.BlinkButton("../../Assets/images/ExitButton.png", 430, 50, 40, 40, 1, 1);
+             this.exitButtonLight = new objects.BlinkButton("../../Assets/images/ExitButtonLight.png", 430, 50, 40, 40, 1, 0.1);
+ 
+             this.exitButton.on("mouseover", function () {
+                 this.exitButtonLight.alpha = this.exitButtonLight.alphaOver;
+             }, this);
+             this.exitButton.on("mouseout", function () {
+                 this.exitButtonLight.alpha = this.exitButtonLight.alphaOut;
+             }, this);
+             this.exitButton.on("click", function () {
+                 createjs.Sound.stop();
+                 createjs.Sound.play("power_down");
+                 setTimeout(function () { window.close();}, 2500);
+             }, this);
+             this.exitButtonLight.on("click", function () {
+                 createjs.Sound.stop();
+                 createjs.Sound.play("power_down");
+                 setTimeout(function () { window.close();}, 2500);
+             }, this);
+             this.addChild(this.exitButton);
+             this.addChild(this.exitButtonLight)
+
         }
 
         // SLOT_MACHINE Scene updates here

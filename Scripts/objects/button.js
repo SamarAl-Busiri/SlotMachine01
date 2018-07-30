@@ -1,26 +1,32 @@
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var objects;
 (function (objects) {
-    var Button = (function (_super) {
+    var Button = /** @class */ (function (_super) {
         __extends(Button, _super);
         //CONSTRUCTOR
         function Button(pathString, x, y, isCentered) {
-            _super.call(this, assets.getResult(pathString));
-            this.isCentered = isCentered;
-            this.x = x;
-            this.y = y;
-            this.width = 150;
-            this.height = 50;
-            if (this.isCentered) {
-                this.regX = this.width * 0.5;
-                this.regY = this.height * 0.5;
+            var _this = _super.call(this, assets.getResult(pathString)) || this;
+            _this.isCentered = isCentered;
+            _this.x = x;
+            _this.y = y;
+            _this.width = 150;
+            _this.height = 50;
+            if (_this.isCentered) {
+                _this.regX = _this.width * 0.5;
+                _this.regY = _this.height * 0.5;
             }
-            this.on("mouseover", this.overButton, this);
-            this.on("mouseout", this.outButton, this);
+            _this.on("mouseover", _this.overButton, _this);
+            _this.on("mouseout", _this.outButton, _this);
+            return _this;
         }
         // PRIVATE METHODS
         // Event Handler for mouse over

@@ -1,7 +1,7 @@
 var objects;
 (function (objects) {
     // ASSET CLASS ++++++++++++++++++++++++++
-    var Asset = (function () {
+    var Asset = /** @class */ (function () {
         // CONSTRUCTOR +++++++++++++++++++++
         function Asset(id, src) {
             this.id = id;

@@ -1,7 +1,7 @@
 var config;
 (function (config) {
     // Scene Constants
-    var Scene = (function () {
+    var Scene = /** @class */ (function () {
         function Scene() {
         }
         Scene.MENU = 0;
@@ -11,7 +11,7 @@ var config;
     }());
     config.Scene = Scene;
     // Screen Constants
-    var Screen = (function () {
+    var Screen = /** @class */ (function () {
         function Screen() {
         }
         Screen.WIDTH = 640;
@@ -22,7 +22,7 @@ var config;
     }());
     config.Screen = Screen;
     // Game Constants
-    var Game = (function () {
+    var Game = /** @class */ (function () {
         function Game() {
         }
         Game.FPS = 60;
